@@ -1,0 +1,18 @@
+language: python
+
+python:
+  - 2.7
+
+services: mysql
+
+install:
+  - pip install -r requirements.txt
+
+before_install:
+  - mysql -e 'CREATE DATABASE  IF NOT EXISTS hasker_test;'
+  - mysql -e 'CREATE DATABASE  IF NOT EXISTS hasker;'
+  - python manage.py migrate --noinput
+  - python manage.py collectstatic
+
+script:
+  - python manage.py test
