@@ -10,7 +10,6 @@ install:
   - python manage.py migrate --noinput
 
 before_install:
-  - mysql -e 'CREATE DATABASE  IF NOT EXISTS hasker_test;'
   - mysql -e 'CREATE DATABASE  IF NOT EXISTS hasker;'
 
 script:
