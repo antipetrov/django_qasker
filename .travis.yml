@@ -8,7 +8,6 @@ services: mysql
 install:
   - pip install -r requirements.txt
   - python manage.py migrate --noinput
-  - python manage.py collectstatic
 
 before_install:
   - mysql -e 'CREATE DATABASE  IF NOT EXISTS hasker_test;'
