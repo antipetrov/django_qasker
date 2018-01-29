@@ -69,6 +69,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'hasker.wsgi.application'
 
+STATIC_ROOT = 'hasker/static'
+
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
