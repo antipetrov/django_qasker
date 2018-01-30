@@ -78,14 +78,15 @@ STATIC_ROOT = 'hasker/static'
 
 # mysql://b64817464909a3:13313200@eu-cdbr-west-02.cleardb.net/heroku_20c5cfc0c73b545?reconnect=true
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST':'eu-cdbr-west-02.cleardb.net',
+        'HOST':'127.0.0.1',
         'PORT':'3306',
-        'USER': 'b64817464909a3',
-        'PASSWORD': '13313200',
-        'NAME': 'heroku_20c5cfc0c73b545',
+        'USER': 'root',
+        'PASSWORD': '',
+        'NAME': 'hasker',
         'TEST':{
             'NAME':'hasker_test'
         }
