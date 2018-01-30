@@ -81,16 +81,17 @@ STATIC_ROOT = 'hasker/static'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST':'127.0.0.1',
+        'HOST':'eu-cdbr-west-02.cleardb.net',
         'PORT':'3306',
-        'USER': 'root',
-        'PASSWORD': '',
-        'NAME': 'hasker',
+        'USER': 'b64817464909a3',
+        'PASSWORD': '13313200',
+        'NAME': 'heroku_20c5cfc0c73b545',
         'TEST':{
             'NAME':'hasker_test'
         }
     }
 }
+
 
 
 # Password validation
