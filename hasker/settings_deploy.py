@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-from settings import *
+from hasker.settings import *
 
 # mysql://b64817464909a3:13313200@eu-cdbr-west-02.cleardb.net/heroku_20c5cfc0c73b545?reconnect=true
 
