@@ -18,7 +18,10 @@ from django.contrib import admin
 from answers import views
 
 urlpatterns = [
-    url(r'^/?$', views.index),
     url(r'^admin/', admin.site.urls),
-       
+
+    url(r'^$', views.index),
+    url(r'^ask/?$', views.ask_question),     
+    url(r'^question/(?P<code>\S+)/$', views.view_question),     
+
 ]
