@@ -1,5 +1,10 @@
 {% extends "answers/base.html" %}
 
 {% block content%}
-This is index
+{% for question in questions %}
+    <div>Question: {{ question.title }}</div>
+    <div>Author: {{ question.author.username }}</div>
+    <div>Created {{ question.create_date }}</div>
+
+{% endfor %}
 {% endblock %}
