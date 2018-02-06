@@ -5,8 +5,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.forms import ModelForm
-
+from forms import AskForm
 from models import Question
 
 
@@ -23,8 +22,8 @@ def user_login(request):
     ctx = {}
     if request.method == 'POST':
         errors = []
-        username=request.POST.get('username')
-        password=request.POST.get('password')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         
         if not username:
             errors.append('no username')
@@ -51,16 +50,17 @@ def user_logout(request):
     return redirect('index')
 
 
-class AskForm(ModelForm):
-    class Meta:
-        model = Question
-        fields = ['title', 'content']
-        labels = {'title': 'TItle', 'content': 'Question'}
-
 @login_required
 def ask_question(request):
     if request.method == 'POST':
+        request.POST['author_id'] = request.user.id
         form = AskForm(request.POST)
+        if form.is_valid():
+            # form.save(commit=False)
+            # form.author_id = request.user.id
+            form.save()
+            return redirect('index')
+
     else:
         form = AskForm()
 

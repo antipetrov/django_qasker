@@ -5,44 +5,21 @@
 
 <h2>Ask question</h2>
 <form method="POST" action="{% url 'ask' %}">{% csrf_token %}
-    {{ form }}
+{% for field in form %}
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label for="title">{{ field.label }}</label>
+            </div>
+        </div>
+        <div class="col-9">
+            {{ field }}
+        </div>
+    </div>
+{% endfor %}
+    {% for error in errors %}
+    <div>Error: {{ error }}</div>
+    {% endfor %}
+    <button type="submit" class="btn btn-lg btn-primary btn-block mt-4">Ask!</button>
 </form>
-{#<form method="POST" action="{% url 'ask' %}">{% csrf_token %}#}
-{#    <div class="row justify-content-center">#}
-{#        <div class="col">#}
-{#            <div class="form-group">#}
-{#                <label for="title">Title</label>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="col-9">#}
-{#            <input type="text" class="form-control" id="title" name="title" placeholder="Title">#}
-{#        </div>#}
-{#    </div>#}
-{#    <div class="row justify-content-center mb-3">#}
-{##}
-{#        <div class="col">#}
-{#            <div class="form-group">#}
-{#                <label for="exampleInputPassword1">Question</label>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="col-9">#}
-{#                <textarea class="form-control" id="question" name="question" rows="10"></textarea>#}
-{#        </div>#}
-{#    </div>#}
-{#    <div class="row justify-content-center">#}
-{#        <div class="col">#}
-{#            <div class="form-group">#}
-{#                <label for="title">Tags</label>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="col-9">#}
-{#            <input type="text" class="form-control" id="tags" name="tags">#}
-{#        </div>#}
-{##}
-{#    </div>#}
-{#    {% for error in errors %}#}
-{#    <div>Error: {{ error }}</div>#}
-{#    {% endfor %}#}
-{#    <button type="submit" class="btn btn-lg btn-primary btn-block mt-4">Ask!</button>#}
-{#</form>#}
 {% endblock %}

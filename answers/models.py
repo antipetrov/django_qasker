@@ -13,7 +13,7 @@ class Question(models.Model):
     rating = models.IntegerField(default=0, null=False, db_index=True)
 
     def __str__(self):
-            return "%s:%s"%(self.title, self.content[:200])
+        return "%s:%s"%(self.title, self.content[:200])
 
 
 class Answer(models.Model):
