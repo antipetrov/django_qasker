@@ -6,9 +6,9 @@ from django.contrib.auth.models import User
 
 
 class Question(models.Model):
-    author = models.ForeignKey(User)
-    create_date = models.DateTimeField('date created', db_index=True)
-    title = models.CharField(max_length=255)
+    author = models.ForeignKey(User, null=False,)
+    create_date = models.DateTimeField('date created', db_index=True, null=False)
+    title = models.CharField(max_length=255, null=False)
     content = models.TextField()
     rating = models.IntegerField(default=0, null=False, db_index=True)
 
@@ -17,9 +17,9 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    user = models.ForeignKey(User)
-    create_date = models.DateTimeField('date created', db_index=True)
-    question = models.ForeignKey(Question)
+    user = models.ForeignKey(User, null=False)
+    create_date = models.DateTimeField('date created', db_index=True, null=False)
+    question = models.ForeignKey(Question, null=False)
     content = models.TextField()
     rating = models.IntegerField(default=0, null=False, db_index=True)
 

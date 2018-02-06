@@ -20,7 +20,7 @@
         {% block user %}
             {% if user.is_authenticated %}
                 <a href="#">{{ request.username }}</a>
-                <a href="{% url 'logout' %}">Logout</a>
+                <a href="{% url 'logout' %}">Logout</a  >
             {% else %}
                 <a href="{% url 'login' %}">Log In</a>
                 <button type="button" class="btn btn-primary">Signup</button>
@@ -31,8 +31,27 @@
 
         </div>
     </div>
-    <div class="container"> 
-{% block content %}{% endblock %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+            {% block content %}{% endblock %}
+            </div>
+            <div class="col-3">
+            {% block side %}
+                {% if user.is_authenticated %}
+                    <a class="btn btn-success" href="{% url 'ask' %}">Ask Question</a>
+                {% endif %}
+                <h3>Trending</h3>
+                {% if topquestions %}
+                {% for top in topquestions %}
+                {{ top.rating }} {{ top.title }}
+                {% endfor %}
+                {% endif %}
+
+            {% endblock %}
+            </div>
+        </div>
+
     </div>
 
 </body>
