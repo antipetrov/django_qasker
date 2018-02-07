@@ -5,12 +5,20 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=255, db_index=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Question(models.Model):
     author = models.ForeignKey(User, null=False,)
     create_date = models.DateTimeField('date created', db_index=True, null=False)
     title = models.CharField(max_length=255, null=False)
     content = models.TextField()
     rating = models.IntegerField(default=0, null=False, db_index=True)
+    tags = models.ManyToManyField(Tag)
 
     def __str__(self):
         return "%s:%s"%(self.title, self.content[:200])
@@ -27,8 +35,3 @@ class Answer(models.Model):
         return "%s:%s"%(self.question.title, self.content[:200])
 
 
-class Tag(models.Model):
-    name = models.CharField(max_length=255, db_index=True)
-
-    def __str__(self):
-        return self.name

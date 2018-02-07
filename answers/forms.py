@@ -16,7 +16,7 @@ class AskForm(ModelForm):
 
     class Meta:
         model = Question
-        exclude = ['author', 'create_date']
+        fields = ['title', 'content', 'tags']
         labels = {'title': 'Title', 'content': 'Question', 'tags':'Tags'}
 
         widgets = {

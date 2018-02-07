@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -53,14 +54,12 @@ def user_logout(request):
 @login_required
 def ask_question(request):
     if request.method == 'POST':
-        request.POST['author_id'] = request.user.id
-        form = AskForm(request.POST)
+        new_question = Question(author=request.user, create_date=datetime.datetime.now())
+
+        form = AskForm(request.POST, instance=new_question)
         if form.is_valid():
-            # form.save(commit=False)
-            # form.author_id = request.user.id
             form.save()
             return redirect('index')
-
     else:
         form = AskForm()
 

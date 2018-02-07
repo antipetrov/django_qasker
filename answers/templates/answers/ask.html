@@ -12,8 +12,12 @@
                 <label for="title">{{ field.label }}</label>
             </div>
         </div>
-        <div class="col-9">
+        <div class="col-9{% if field.errors %} is_invalid{% endif %}">
             {{ field }}
+            <div class="invalid-feedback">
+            {{ field.errors }}
+            </div>
+
         </div>
     </div>
 {% endfor %}
