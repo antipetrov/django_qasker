@@ -25,9 +25,9 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    user = models.ForeignKey(User, null=False)
+    author = models.ForeignKey(User, null=False)
     create_date = models.DateTimeField('date created', db_index=True, null=False)
-    question = models.ForeignKey(Question, null=False)
+    question = models.ForeignKey(Question, null=False, related_name='answers')
     content = models.TextField()
     rating = models.IntegerField(default=0, null=False, db_index=True)
 

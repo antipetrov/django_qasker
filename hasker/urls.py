@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^login/$', views.user_login, name="login"),
     url(r'^logout/$', views.user_logout, name="logout"),
     url(r'^ask/?$', views.ask_question, name="ask"),
-    url(r'^question/(?P<code>\S+)/$', views.view_question),     
+    url(r'^tags.json/?$', views.list_tags_json, name="tags.json"),
+    url(r'^question/(?P<question_id>\d+)/?$', views.view_question, name='view_question'),
 
 ]

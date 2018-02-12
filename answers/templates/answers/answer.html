@@ -1,0 +1,26 @@
+{% extends "answers/base.html" %}
+
+{% block content%}
+    <div></div>
+
+    <div>Question: {{ question.title }}</div>
+    <div>Author: {{ question.author.username }}</div>
+    <div>Created {{ question.create_date }}</div>
+
+{% for answer in question.answers.all %}
+    <div>{{ answer.content}}</div>
+    <div>Author: {{ answer.author.username }}</div>
+    <div>Created {{ answer.create_date }}</div>
+    <hr />
+{% endfor %}
+    <h2>Your answer</h2>
+<form method="POST" action="{% url 'view_question' question.id %}">{% csrf_token %}
+    <div class="form-group">
+        <textarea name="answer" id="answer" class="form-control"></textarea>
+    </div>
+    {% for error in errors %}
+    <div>Error: {{ error }}</div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}
