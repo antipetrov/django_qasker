@@ -35,3 +35,6 @@ class Answer(models.Model):
         return "%s:%s"%(self.question.title, self.content[:200])
 
 
+class UserProfile(models.Model):
+    user = models.ForeignKey(User, related_name='profile')
+    avatar_href = models.CharField(max_length=255, null=True)

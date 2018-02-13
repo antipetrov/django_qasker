@@ -6,6 +6,7 @@ import json
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from forms import AskForm
 from models import Question, Tag, Answer
@@ -53,6 +54,10 @@ def user_logout(request):
     return redirect('index')
 
 
+def user_signup(request):
+    return render(request, 'answers/signup.html', {})
+
+
 @login_required
 def ask_question(request):
     if request.method == 'POST':
@@ -75,6 +80,7 @@ def list_tags_json(request):
     return HttpResponse(json.dumps(tags))
 
 
+@login_required
 def view_question(request, question_id):
     errors = []
     try:
@@ -106,6 +112,16 @@ def view_question(request, question_id):
             redirect('view_question', question.id)
 
     return render(request, 'answers/answer.html', {'question': question, 'errors':errors})
+
+
+@login_required
+def view_user(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        raise Http404("Question does not exist")
+
+    return render(request, 'answers/user.html', {'user': user})
 
 
 def search_result(request):

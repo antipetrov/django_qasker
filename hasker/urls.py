@@ -26,5 +26,6 @@ urlpatterns = [
     url(r'^ask/?$', views.ask_question, name="ask"),
     url(r'^tags.json/?$', views.list_tags_json, name="tags.json"),
     url(r'^question/(?P<question_id>\d+)/?$', views.view_question, name='view_question'),
+    url(r'^user/(?P<user_id>\d+)/?$', views.view_user, name='view_user'),
 
 ]

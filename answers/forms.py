@@ -5,6 +5,7 @@ from django.forms import ModelForm
 
 from django.forms.widgets import Widget, Input, Textarea
 from django.forms.utils import ErrorList
+from django.contrib.auth.forms import UserCreationForm
 
 from models import Question
 
@@ -12,7 +13,6 @@ class AskForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AskForm, self).__init__(*args, **kwargs)
-
 
     class Meta:
         model = Question
@@ -24,4 +24,12 @@ class AskForm(ModelForm):
             'content': Textarea(attrs={'class': 'form-control'}),
             'tags': Input(attrs={'class': 'form-control'}),
         }
+
+
+class SignupForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(SignupForm, self).__init__(*args, **kwargs)
+
+
 
