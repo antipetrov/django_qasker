@@ -8,7 +8,7 @@ from django.http import HttpResponse, Http404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from forms import AskForm
+from forms import AskForm, SignupForm
 from models import Question, Tag, Answer
 
 
@@ -122,6 +122,11 @@ def view_user(request, user_id):
         raise Http404("Question does not exist")
 
     return render(request, 'answers/user.html', {'user': user})
+
+
+def signup(request):
+    form = SignupForm()
+    return render(request, 'answers/signup.html', {'form': form})
 
 
 def search_result(request):

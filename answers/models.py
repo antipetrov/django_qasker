@@ -37,4 +37,4 @@ class Answer(models.Model):
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, related_name='profile')
-    avatar_href = models.CharField(max_length=255, null=True)
+    avatar_href = models.FileField(upload_to='uploads/')

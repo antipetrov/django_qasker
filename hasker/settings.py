@@ -72,6 +72,8 @@ WSGI_APPLICATION = 'hasker.wsgi.application'
 
 STATIC_ROOT = 'hasker/static'
 
+MEDIA_ROOT = 'hasker/media'
+
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
