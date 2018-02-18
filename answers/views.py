@@ -125,7 +125,15 @@ def view_user(request, user_id):
 
 
 def signup(request):
-    form = SignupForm()
+    if request.method == 'POST':
+        form = SignupForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = SignupForm()
+
     return render(request, 'answers/signup.html', {'form': form})
 
 

@@ -3,25 +3,25 @@
 {% block content %}
 
 <h2>Sign Up</h2>
-<form method="POST" action="{% url 'signup' %}">{% csrf_token %}
-{% for field in form %}
-    <div class="row">
+<form method="POST" action="{% url 'signup' %}" enctype="multipart/form-data">{% csrf_token %}
+{% for field in form.visible_fields %}
+    <div class="form-row">
         <div class="col">
             <div class="form-group">
-                <label for="title">{{ field.label }}</label>
+                <label for="{{ field.name }}">{{ field.label }}</label>
             </div>
         </div>
-        <div class="col-9{% if field.errors %} is_invalid{% endif %}">
+        <div class="col-9 {% if field.errors %} is_invalid{% endif %}">
             {{ field }}
-            <div class="invalid-feedback">
+            <div>
             {{ field.errors }}
             </div>
 
         </div>
     </div>
 {% endfor %}
-    {% for error in errors %}
-    <div>Error: {{ error }}</div>
+    {% for error in form.errors %}
+    <div class="invalid-feedback">Error: {{ error }}</div>
     {% endfor %}
     <button type="submit" class="btn btn-lg btn-primary btn-block mt-4">SignUp</button>
 </form>
