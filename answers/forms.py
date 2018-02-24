@@ -5,14 +5,23 @@ from datetime import datetime
 
 from django import forms
 from django.forms.utils import ErrorList
+from django.contrib.auth import password_validation
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
+
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from models import Question, UserProfile
 
 class AskForm(forms.ModelForm):
+
+    title = forms.CharField(max_length=64, label='Title', strip=True, required=True,
+                            widget=forms.widgets.Input(attrs={'class': 'form-control'}))
+    content = forms.CharField(max_length=255, label='Text', strip=True, required=True,
+                              widget=forms.widgets.Textarea(attrs={'class': 'form-control'}))
+    tags = forms.CharField(max_length=64, label='Tags', strip=True, required=False,
+                           widget=forms.widgets.Input(attrs={'class': 'form-control'}))
 
     def __init__(self, *args, **kwargs):
         super(AskForm, self).__init__(*args, **kwargs)
@@ -20,13 +29,6 @@ class AskForm(forms.ModelForm):
     class Meta:
         model = Question
         fields = ['title', 'content', 'tags']
-        labels = {'title': 'Title', 'content': 'Question', 'tags':'Tags'}
-
-        widgets = {
-            'title': forms.widgets.Input(attrs={'class': 'form-control'}),
-            'content': forms.widgets.Textarea(attrs={'class': 'form-control'}),
-            'tags': forms.widgets.Input(attrs={'class': 'form-control'}),
-        }
 
 
 class SignupForm(forms.ModelForm):
@@ -56,6 +58,9 @@ class SignupForm(forms.ModelForm):
                 self.error_messages['password_mismatch'],
                 code='password_mismatch',
             )
+
+        password_validation.validate_password(password2)
+
         return password2
 
     @transaction.atomic
@@ -67,14 +72,16 @@ class SignupForm(forms.ModelForm):
         # user.date_joined = datetime.now()
         # user.save()
 
-        user = super(SignupForm, self).save(*args, **kwargs)
-        user.set_password(self.cleaned_data["password1"])
-        user.save()
+        new_user = super(SignupForm, self).save(*args, **kwargs)
+        new_user.set_password(self.cleaned_data["password1"])
+        new_user.save()
 
         new_profile = UserProfile()
-        new_profile.user = user
+        new_profile.user = new_user
         new_profile.avatar_href = self.cleaned_data.get('avatar')
         new_profile.save()
+
+        return new_profile
 
 
 

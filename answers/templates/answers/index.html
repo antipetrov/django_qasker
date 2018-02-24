@@ -3,11 +3,24 @@
 {% block content%}
     <div></div>
 {% for question in questions %}
-    <div><a href="/question/{{ question.pk }}">Question: {{ question.title }}</a></div>
-    <div>Author: {{ question.author.username }}</div>
-    <div>Created {{ question.create_date }}</div>
-    <div>Answers: {{ question.answers.count }}</div>
 
+
+    <div class="row">
+        <div class="col-sm-2">
+            {{ question.answers.count }}<br/>
+            Votes
+        </div>
+        <div class="col-sm-2">
+            {{ question.answers.count }}<br/>
+            Answers
+        </div>
+
+        <div class="col-lg-5">
+            <div class="row"><a href="/question/{{ question.pk }}">{{ question.title }}</a></div>
+            <div class="row"><a href="{% url 'view_user' question.author.pk %}">{{ question.author.username }}</a></div>
+            <div class="row">Created {{ question.create_date }}</div>
+        </div>
+    </div>
 
 {% endfor %}
 {% endblock %}

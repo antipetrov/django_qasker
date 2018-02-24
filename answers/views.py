@@ -67,6 +67,8 @@ def ask_question(request):
         if form.is_valid():
             form.save()
             return redirect('index')
+        else:
+            pass
     else:
         form = AskForm()
 
@@ -130,7 +132,7 @@ def signup(request):
 
         if form.is_valid():
             form.save()
-            return redirect('login')
+            return render(request, 'answers/signup_complete.html')
     else:
         form = SignupForm()
 
