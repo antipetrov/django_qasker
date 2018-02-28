@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from forms import AskForm, SignupForm
 from models import Question, Tag, Answer
+from django import urls
 
 
 # Create your views here.
@@ -114,6 +115,27 @@ def view_question(request, question_id):
             redirect('view_question', question.id)
 
     return render(request, 'answers/answer.html', {'question': question, 'errors':errors})
+
+@login_required
+def view_question_vote(request, question_id, answer_id, action):
+    try:
+        question = Question.objects.get(id=question_id)
+    except Question.DoesNotExist:
+        raise Http404("Question does not exist")
+
+    try:
+        answer = Answer.objects.get(id=answer_id)
+    except Question.DoesNotExist:
+        raise Http404("Answer does not exist")
+
+    if answer.question_id != question.id:
+        raise Http404("Answer not found")
+
+    if action == 'plus':
+        answer.votes.add(request.user)
+    else:
+        answer.votes.remove (request.user)
+    return redirect('view_question', question.id)
 
 
 @login_required

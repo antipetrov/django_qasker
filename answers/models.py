@@ -30,6 +30,7 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, null=False, related_name='answers')
     content = models.TextField()
     rating = models.IntegerField(default=0, null=False, db_index=True)
+    votes = models.ManyToManyField(User, related_name='voted_answers')
 
     def __str__(self):
         return "%s:%s"%(self.question.title, self.content[:200])
