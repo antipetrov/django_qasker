@@ -79,7 +79,10 @@ def ask_question(request):
 @login_required
 def list_tags_json(request):
 
-    tags = {tag.id: tag.name for tag in Tag.objects.all()}
+    term = request.GET.get('term')
+
+    if term:
+        tags = list(tag.name for tag in Tag.objects.filter(name__startswith=term)[:20])
     return HttpResponse(json.dumps(tags))
 
 

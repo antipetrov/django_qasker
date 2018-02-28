@@ -32,6 +32,7 @@ class Answer(models.Model):
     content = models.TextField()
     rating = models.IntegerField(default=0, null=False, db_index=True)
     votes = models.ManyToManyField(User, related_name='voted_answers')
+    is_accepted = models.BooleanField(default=False)
 
     def __str__(self):
         return "%s:%s"%(self.question.title, self.content[:200])
