@@ -9,33 +9,75 @@ from django.contrib.auth import password_validation
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
+from django.core.exceptions import ValidationError
 
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from models import Question, UserProfile
+from models import Question, UserProfile, Tag
+from widgets import TagsInput
+
+
+class TagsField(forms.Field):
+    def __init__(self, max_length, *args, **kwargs):
+        super(TagsField, self).__init__(*args, **kwargs)
+        self.max_length = max_length
+
+    def to_python(self, value):
+        if not value:
+            return []
+
+        return value.split(',')
+
+    def validate(self, value):
+        super(TagsField, self).validate(value)
+        if len(value) > self.max_length:
+            raise ValidationError("Too much tags. %s is maximum" % self.max_length, code='max_length')
+
+    def value_from_object(self, obj):
+        """
+        Return all related tagnames
+        """
+        return ','.join([row.name for row in self.related_model.objects.all()])
+
 
 class AskForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['title', 'content', 'tags']
 
     title = forms.CharField(max_length=64, label='Title', strip=True, required=True,
                             widget=forms.widgets.Input(attrs={'class': 'form-control'}))
     content = forms.CharField(max_length=255, label='Text', strip=True, required=True,
                               widget=forms.widgets.Textarea(attrs={'class': 'form-control'}))
-    tags = forms.CharField(max_length=64, label='Tags', strip=True, required=False,
-                           widget=forms.widgets.Input(attrs={'class': 'form-control'}))
+    tags = TagsField(max_length=3, widget=TagsInput(attrs={'class': 'form-control'}))
 
     def __init__(self, *args, **kwargs):
         super(AskForm, self).__init__(*args, **kwargs)
 
-    class Meta:
-        model = Question
-        fields = ['title', 'content', 'tags']
+
+    def _save_m2m(self):
+        # add new tags
+        tags = self.cleaned_data['tags']
+        tags_qs = Tag.objects.filter(name__in=tags).all()
+
+        new_tags = set(tags) - set(row.name for row in tags_qs)
+        for t in new_tags:
+            new_tag = Tag()
+            new_tag.name = t
+            new_tag.save()
+
+        super(AskForm, self)._save_m2m()
+
 
 
 class SignupForm(forms.ModelForm):
 
-    username = forms.CharField(max_length=64, strip=True, widget=forms.widgets.TextInput(attrs={'class':'form-control'}))
-    password1 = forms.CharField(max_length=64, strip=True, widget=forms.widgets.PasswordInput(attrs={'class':'form-control'}))
-    password2 = forms.CharField(max_length=64, strip=True, widget=forms.widgets.PasswordInput(attrs={'class':'form-control'}))
+    username = forms.CharField(max_length=64, strip=True,
+                               widget=forms.widgets.TextInput(attrs={'class': 'form-control'}))
+    password1 = forms.CharField(max_length=64, strip=True,
+                                widget=forms.widgets.PasswordInput(attrs={'class': 'form-control'}))
+    password2 = forms.CharField(max_length=64, strip=True,
+                                widget=forms.widgets.PasswordInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(widget=forms.widgets.EmailInput(attrs={'class': 'form-control'}))
     avatar = forms.FileField(widget=forms.widgets.FileInput(attrs={'class': 'form-control'}), required=False)
 

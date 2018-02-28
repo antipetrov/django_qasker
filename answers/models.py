@@ -6,10 +6,10 @@ from django.contrib.auth.models import User
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=255, db_index=True)
+    name = models.CharField(primary_key=True, max_length=255)
 
     def __str__(self):
-        return self.name
+        return "[%s]" % self.name
 
 
 class Question(models.Model):
@@ -37,4 +37,4 @@ class Answer(models.Model):
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, related_name='profile')
-    avatar_href = models.FileField(upload_to='uploads/')
+    avatar_href = models.FileField(upload_to='uploads/', null=True)

@@ -78,7 +78,7 @@ def ask_question(request):
 @login_required
 def list_tags_json(request):
 
-    tags = {tag.id:tag.name for tag in Tag.objects.all()}
+    tags = {tag.id: tag.name for tag in Tag.objects.all()}
     return HttpResponse(json.dumps(tags))
 
 
