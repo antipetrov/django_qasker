@@ -117,7 +117,21 @@ def view_question(request, question_id):
     return render(request, 'answers/answer.html', {'question': question, 'errors':errors})
 
 @login_required
-def view_question_vote(request, question_id, answer_id, action):
+def question_vote(request, question_id, action):
+    try:
+        question = Question.objects.get(id=question_id)
+    except Question.DoesNotExist:
+        raise Http404("Question does not exist")
+
+    if action == 'plus':
+        question.votes.add(request.user)
+    else:
+        question.votes.remove (request.user)
+    return redirect('view_question', question.id)
+
+
+@login_required
+def answer_vote(request, question_id, answer_id, action):
     try:
         question = Question.objects.get(id=question_id)
     except Question.DoesNotExist:

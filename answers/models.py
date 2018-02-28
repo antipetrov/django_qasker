@@ -19,6 +19,7 @@ class Question(models.Model):
     content = models.TextField()
     rating = models.IntegerField(default=0, null=False, db_index=True)
     tags = models.ManyToManyField(Tag)
+    votes = models.ManyToManyField(User, related_name='voted_questions')
 
     def __str__(self):
         return "%s:%s"%(self.title, self.content[:200])

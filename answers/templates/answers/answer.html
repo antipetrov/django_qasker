@@ -1,8 +1,18 @@
 {% extends "answers/base.html" %}
 
 {% block content%}
+
     <h2>{{ question.title }}</h2>
-    <p>{{ question.content }}</p>
+
+    <div class="row">
+        <div class="col-lg-2">
+            <div><a href="{% url 'question_vote' question.id 'plus' %}">+</a></div>
+            <div>{{ question.votes.count }}</div>
+            <div><a href="{% url 'question_vote' question.id 'minus' %}">-</a></div>
+        </div>
+
+        <p>{{ question.content }}</p>
+    </div>
     <div class="row">
         <div class="col-4">{% for tag in question.tags.all %} <a href="/?search=[{{ tag.name }}]" class="btn btn-info btn-sm" role="button">{{ tag.name }}</a>&nbsp;{% endfor %}</div>
         <div class="col-4">{{ question.author.profile.avatar_href }} {{ question.author.username }}</div>
@@ -12,9 +22,9 @@
 {% for answer in question.answers.all %}
     <div class="row">
         <div class="col-lg-2">
-            <div><a href="{% url 'view_question_vote' question.id answer.id 'plus' %}">+</a></div>
+            <div><a href="{% url 'answer_vote' question.id answer.id 'plus' %}">+</a></div>
             <div>{{ answer.votes.count }}</div>
-            <div><a href="{% url 'view_question_vote' question.id answer.id 'minus' %}">-</a></div>
+            <div><a href="{% url 'answer_vote' question.id answer.id 'minus' %}">-</a></div>
         </div>
         <div>{{ answer.content}}</div>
     </div>
