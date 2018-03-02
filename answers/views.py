@@ -3,8 +3,13 @@ from __future__ import unicode_literals
 
 import datetime
 import json
+
+from django.db import transaction
+from django.db.models import Q
+from django.core.paginator import Paginator,EmptyPage, PageNotAnInteger
+
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseNotAllowed
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -13,14 +18,94 @@ from models import Question, Tag, Answer
 from django import urls
 
 
-# Create your views here.
+def _parse_search(search_term):
+    tags = []
+    words = []
+    formatted_term = ''
+
+    if search_term:
+        parts = [p.strip() for p in search_term.split(' ')]
+        for part in parts:
+            if part.startswith('tag:'):
+                tags.append(part[4:])
+            else:
+                words.append(part)
+
+        formatted_term = " ".join(["tag:%s"%tag for tag in tags]) + " " + " ".join(words)
+
+    search_dict = {
+            "words": words,
+            "tags": tags,
+            "full_term": formatted_term
+        }
+
+    return search_dict
+
+
+def _paginate(objects, page, on_page=5):
+
+    paginator = Paginator(objects, on_page)
+
+    try:
+        objects_page = paginator.page(page)
+    except PageNotAnInteger:
+        objects_page = paginator.page(1)
+    except EmptyPage:
+        objects_page = paginator.page(paginator.num_pages)
+
+    return objects_page
+
+
 def index(request):
-    # todo: sort by rating
-    questions = Question.objects.all()
-    topquestions = Question.objects.all()
+    page = request.GET.get('page')
+    question_page = _paginate(Question.objects.presorted(), page)
+
+    topquestions = Question.objects.presorted()[:10]
+
+
+    return render(request, 'answers/index.html', {"questions": question_page,
+                                                  "topquestions": topquestions
+                                                  })
+
+
+def search_result(request):
+    search_dict = _parse_search(request.GET.get('q'))
+
+    questions = Question.objects
+    if not search_dict['words'] and not search_dict['tags']:
+        questions = questions.presorted()
+    else:
+        if search_dict['tags']:
+            questions = questions.filter(tags__name__in=search_dict['tags'])
+
+        if search_dict['words']:
+            search_term = ' '.join(search_dict['words'])
+            questions = questions.filter(Q(title__contains=search_term) | Q(content__contains=search_term))
+
+    topquestions = Question.objects.presorted()
+
+    page = request.GET.get('page')
+    questions = _paginate(questions, page)
+
+    return render(request, 'answers/index.html', {
+        "questions": questions,
+        "topquestions": topquestions,
+        "search": search_dict
+        })
+
+
+def tag_result(request, tag):
+    search_dict = _parse_search("tag:%s" % tag)
+    questions = Question.objects.presorted().filter(tags__name__in=search_dict['tags'])
+
+    topquestions = Question.objects.presorted()
+
+    page = request.GET.get('page')
+    questions = _paginate(questions, page)
 
     return render(request, 'answers/index.html', {"questions": questions,
-                                                  "topquestions": topquestions})
+                                                  "topquestions": topquestions,
+                                                  "search": search_dict})
 
 
 def user_login(request):
@@ -94,6 +179,8 @@ def view_question(request, question_id):
     except Question.DoesNotExist:
         raise Http404("Question does not exist")
 
+    is_my = (request.user.id == question.author.id)
+
     if request.method == 'POST':
 
         # validate
@@ -103,21 +190,29 @@ def view_question(request, question_id):
 
         answer_text = answer_text[:8192]
 
-        try:
-            new_answer = Answer()
-            new_answer.question = question
-            new_answer.author = request.user
-            new_answer.content = answer_text
-            new_answer.create_date = datetime.datetime.now()
+        with transaction.atomic():
+            try:
+                new_answer = Answer()
+                new_answer.question = question
+                new_answer.author = request.user
+                new_answer.content = answer_text
+                new_answer.create_date = datetime.datetime.now()
 
-            new_answer.save()
-        except Exception as e:
-            errors.append("Unable to save answer: %s" % e.message)
+                new_answer.save()
+            except Exception as e:
+                errors.append("Unable to save answer: %s" % e.message)
+
+            question.answers_count = Answer.objects.filter(question_id=question.id).count()
+            question.save()
 
         if not errors:
             redirect('view_question', question.id)
 
-    return render(request, 'answers/answer.html', {'question': question, 'errors':errors})
+
+    return render(request, 'answers/answer.html', {'question': question,
+                                                   'errors': errors,
+                                                   'is_my': is_my})
+
 
 @login_required
 def question_vote(request, question_id, action):
@@ -126,10 +221,16 @@ def question_vote(request, question_id, action):
     except Question.DoesNotExist:
         raise Http404("Question does not exist")
 
-    if action == 'plus':
-        question.votes.add(request.user)
-    else:
-        question.votes.remove (request.user)
+    with transaction.atomic():
+        if action == 'plus':
+            question.votes.add(request.user)
+        else:
+            question.votes.remove(request.user)
+
+        # update rating
+        question.rating = question.votes.count()
+        question.save()
+
     return redirect('view_question', question.id)
 
 
@@ -141,18 +242,45 @@ def answer_vote(request, question_id, answer_id, action):
         raise Http404("Question does not exist")
 
     try:
-        answer = Answer.objects.get(id=answer_id)
+        answer = Answer.objects.prefetch_related('votes').get(id=answer_id)
     except Question.DoesNotExist:
         raise Http404("Answer does not exist")
 
     if answer.question_id != question.id:
         raise Http404("Answer not found")
 
-    if action == 'plus':
-        answer.votes.add(request.user)
-    else:
-        answer.votes.remove (request.user)
-    return redirect('view_question', question.id)
+    with transaction.atomic():
+        if action == 'plus':
+            answer.votes.add(request.user)
+        else:
+            answer.votes.remove(request.user)
+
+        # update rating
+        answer.rating = answer.votes.count()
+        answer.save()
+
+        return redirect('view_question', question.id)
+
+
+@login_required
+def answer_accept(request, answer_id):
+    try:
+        answer = Answer.objects.get(id=answer_id)
+    except Question.DoesNotExist:
+        raise Http404("Answer does not exist")
+
+    if not answer.author == request.user:
+        raise HttpResponseNotAllowed("You cannot mark someone elses answer")
+
+    with transaction.atomic():
+        if not answer.is_accepted:
+            # if going to accept
+            Answer.objects.filter(question=answer.question).update(is_accepted=False)
+
+        answer.is_accepted = not answer.is_accepted
+        answer.save()
+
+    return redirect('view_question', answer.question_id)
 
 
 @login_required
@@ -176,7 +304,3 @@ def signup(request):
         form = SignupForm()
 
     return render(request, 'answers/signup.html', {'form': form})
-
-
-def search_result(request):
-    return HttpResponse("Search result Page")

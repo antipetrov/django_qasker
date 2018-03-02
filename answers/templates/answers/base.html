@@ -18,7 +18,9 @@
                 <h1>Hasker</h1>
             </div>
             <div class="col-4">
-                <input type="search" class="form-control" id="search" placeholder="Search...">
+                <form method="GET" action="{% url 'search_result' %}" novalidate>
+                    <input type="text" name="q" class="form-control" id="search" placeholder="Search..." value="{{ search.full_term }}">
+                </form>
             </div>
             <div class="col-2">
         {% block user %}

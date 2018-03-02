@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-lg-2">
             <div><a href="{% url 'question_vote' question.id 'plus' %}">+</a></div>
-            <div>{{ question.votes.count }}</div>
+            <div>{{ question.rating }}</div>
             <div><a href="{% url 'question_vote' question.id 'minus' %}">-</a></div>
         </div>
 
@@ -22,11 +22,19 @@
 {% for answer in question.answers.all %}
     <div class="row">
         <div class="col-lg-2">
+            {% if answer.is_accepted %}
+                <div>ACCEPTED</div>
+                {% if is_my %}<div><a href="{% url 'answer_accept' answer.id %}">un-accept</a></div>{% endif %}
+            {% else %}
+                {% if is_my %}<div><a href="{% url 'answer_accept' answer.id %}">accept</a></div>{% endif %}
+            {% endif %}
             <div><a href="{% url 'answer_vote' question.id answer.id 'plus' %}">+</a></div>
-            <div>{{ answer.votes.count }}</div>
+            <div>{{ answer.rating }}</div>
             <div><a href="{% url 'answer_vote' question.id answer.id 'minus' %}">-</a></div>
+
+
         </div>
-        <div>{{ answer.content}}</div>
+        <div class="col-4">{{ answer.content}}</div>
     </div>
     <div class="row">
         <div class="col-4">&nbsp;</div>
