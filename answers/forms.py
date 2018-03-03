@@ -14,7 +14,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from models import Question, UserProfile, Tag
-from widgets import TagsInput
+from widgets import TagsInput, ImageInput
 
 
 class TagsField(forms.Field):
@@ -79,7 +79,7 @@ class SignupForm(forms.ModelForm):
     password2 = forms.CharField(max_length=64, strip=True,
                                 widget=forms.widgets.PasswordInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(widget=forms.widgets.EmailInput(attrs={'class': 'form-control'}))
-    avatar = forms.FileField(widget=forms.widgets.FileInput(attrs={'class': 'form-control'}), required=False)
+    avatar = forms.FileField(widget=ImageInput(attrs={'class': 'form-control'}), required=False)
 
     class Meta:
         model = User

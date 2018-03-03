@@ -2,7 +2,7 @@
 __author__ = 'petrmatuhov'
 
 
-from  django.forms.widgets import Input
+from  django.forms.widgets import Input, FileInput
 
 class TagsInput(Input):
     """
@@ -21,3 +21,9 @@ class TagsInput(Input):
         context = super(Input, self).get_context(name, value, attrs)
         context['widget']['type'] = self.input_type
         return context
+
+
+class ImageInput(FileInput):
+    input_type = 'file'
+    needs_multipart_form = True
+    template_name = 'answers/widgets/image_input.html'

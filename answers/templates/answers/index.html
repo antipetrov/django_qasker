@@ -7,10 +7,8 @@
     <div class="row">
         <h2>Search result</h2>
     </div>
-{#    <div class="row">search: {% for word in search.words %}{{ word  }} {% endfor %}</div>#}
     {% elif search.tags %}
     <h2>Tag result</h2>
-{#    <div class="row">Tag: {% for tag in search.tags %}{{ tag }} {% endfor %}</div>#}
     {% endif %}
 
         {% if not questions %}<div class="alert alert-warning">Not found</div>{% endif %}
@@ -39,14 +37,12 @@
             <div class="row"><a href="{% url 'view_user' question.author.pk %}">{{ question.author.username }}</a></div>
         </div>
     </div>
-
-
-
     {% endfor %}
 
-    <div class="row align-content-center">
+    <div class="row mt-5">
+    <div class="col-10 text-center">
     <nav>
-        <ul class="pagination">
+        <ul class="pagination text-center">
             {% if questions.has_previous %}
             <li class="page-item"><a class="page-link" href="?page={{ questions.previous_page_number }}">Previous</a></li>
             {% else %}
@@ -67,5 +63,6 @@
             {% endif %}
         </ul>
     </nav>
+    </div>
     </div>
 {% endblock %}

@@ -1,0 +1,23 @@
+{% load staticfiles %}
+<img src="{% static 'css/images/avatar_75.png' %}" width="75" height="75" id="{{ widget.name }}_preview"/><br/>
+<input type="file" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value }}"{% endif %}{% include "django/forms/widgets/attrs.html" %} />
+<script type="text/javascript">
+function readURL(input) {
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            $('#{{ widget.name }}_preview').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("[name='{{ widget.name }}']").change(function() {
+
+    console.log('fire change');
+    readURL(this);
+});
+
+</script>
