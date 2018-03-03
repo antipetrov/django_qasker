@@ -74,7 +74,11 @@ WSGI_APPLICATION = 'hasker.wsgi.application'
 
 STATIC_ROOT = 'hasker/static'
 
+STATIC_URL = '/static/'
+
 MEDIA_ROOT = 'hasker/media'
+
+MEDIA_URL = '/media/'
 
 
 AUTH_USER_MODEL = 'answers.User'

@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.conf.urls.static import static
+
 from answers import views
+
 import settings
 
 urlpatterns = [
@@ -35,7 +38,7 @@ urlpatterns = [
     url(r'^user/(?P<user_id>\d+)/?$', views.view_user, name='view_user'),
     url(r'^signup/?$', views.signup, name='signup'),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     import debug_toolbar

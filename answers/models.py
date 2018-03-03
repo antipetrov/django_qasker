@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, AbstractUser
 
 
 class User(AbstractUser):
-    avatar = models.FileField(upload_to='uploads/', null=True)
+    avatar = models.ImageField(upload_to='uploads/', null=True)
 
 
 class Tag(models.Model):
