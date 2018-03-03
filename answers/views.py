@@ -11,10 +11,9 @@ from django.core.paginator import Paginator,EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpResponseNotAllowed
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from forms import AskForm, SignupForm
-from models import Question, Tag, Answer
+from models import Question, Tag, Answer, User
 from django import urls
 
 
@@ -288,7 +287,7 @@ def view_user(request, user_id):
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
-        raise Http404("Question does not exist")
+        raise Http404("User does not exist")
 
     return render(request, 'answers/user.html', {'user': user})
 

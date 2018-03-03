@@ -2,7 +2,11 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractBaseUser, AbstractUser
+
+
+class User(AbstractUser):
+    avatar = models.FileField(upload_to='uploads/', null=True)
 
 
 class Tag(models.Model):
@@ -46,6 +50,8 @@ class Answer(models.Model):
         return "%s:%s"%(self.question.title, self.content[:200])
 
 
-class UserProfile(models.Model):
-    user = models.ForeignKey(User, related_name='profile')
-    avatar_href = models.FileField(upload_to='uploads/', null=True)
+# class UserProfile(models.Model):
+#     user = models.ForeignKey(User, related_name='profile')
+#     avatar_href = models.FileField(upload_to='uploads/', null=True)
+#
+#

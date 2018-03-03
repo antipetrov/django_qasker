@@ -13,7 +13,7 @@ from django.core.exceptions import ValidationError
 
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from models import Question, UserProfile, Tag
+from models import Question, User, Tag
 from widgets import TagsInput, ImageInput
 
 
@@ -116,12 +116,13 @@ class SignupForm(forms.ModelForm):
 
         new_user = super(SignupForm, self).save(*args, **kwargs)
         new_user.set_password(self.cleaned_data["password1"])
+        new_user.avatar = self.cleaned_data.get('avatar')
         new_user.save()
-
-        new_profile = UserProfile()
-        new_profile.user = new_user
-        new_profile.avatar_href = self.cleaned_data.get('avatar')
-        new_profile.save()
+        #
+        # new_profile = User()
+        # new_profile.user = new_user
+        # new_profile.avatar_href = self.cleaned_data.get('avatar')
+        # new_profile.save()
 
         return new_profile
 

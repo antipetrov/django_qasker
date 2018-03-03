@@ -77,6 +77,9 @@ STATIC_ROOT = 'hasker/static'
 MEDIA_ROOT = 'hasker/media'
 
 
+AUTH_USER_MODEL = 'answers.User'
+
+
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
