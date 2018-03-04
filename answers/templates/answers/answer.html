@@ -5,10 +5,10 @@
     <h2>{{ question.title }}</h2>
 
     <div class="row">
-        <div class="col-lg-2">
-            <div><a href="{% url 'question_vote' question.id 'plus' %}">+</a></div>
+        <div class="col-lg-1 text-center" >
+            <div><a href="{% url 'question_vote' question.id 'plus' %}"><span class="oi oi-chevron-top"></span></a></div>
             <div>{{ question.rating }}</div>
-            <div><a href="{% url 'question_vote' question.id 'minus' %}">-</a></div>
+            <div><a href="{% url 'question_vote' question.id 'minus' %}"><span class="oi oi-chevron-bottom"></span></a></div>
         </div>
 
         <p>{{ question.content }}</p>
@@ -21,16 +21,16 @@
     <hr />
 {% for answer in question.answers.all %}
     <div class="row">
-        <div class="col-lg-2">
+        <div class="col-lg-1">
             {% if answer.is_accepted %}
-                <div>ACCEPTED</div>
+                <div><span class="oi oi-star"></span></div>
                 {% if is_my %}<div><a href="{% url 'answer_accept' answer.id %}">un-accept</a></div>{% endif %}
             {% else %}
                 {% if is_my %}<div><a href="{% url 'answer_accept' answer.id %}">accept</a></div>{% endif %}
             {% endif %}
-            <div><a href="{% url 'answer_vote' question.id answer.id 'plus' %}">+</a></div>
-            <div>{{ answer.rating }}</div>
-            <div><a href="{% url 'answer_vote' question.id answer.id 'minus' %}">-</a></div>
+            <div class="text-center"><a href="{% url 'answer_vote' question.id answer.id 'plus' %}"><span class="oi oi-chevron-top"></span></a></div>
+            <div class="text-center">{{ answer.rating }}</div>
+            <div class="text-center"><a href="{% url 'answer_vote' question.id answer.id 'minus' %}"><span class="oi oi-chevron-bottom"></span></a></div>
 
 
         </div>
