@@ -5,52 +5,77 @@
     <h2>{{ question.title }}</h2>
 
     <div class="row">
-        <div class="col-lg-1 text-center" >
-            <div><a href="{% url 'question_vote' question.id 'plus' %}"><span class="oi oi-chevron-top"></span></a></div>
+        <div class="col-lg-1 text-center mt-1 mb-1" >
+            <div>{% if user.is_authenticated %}
+                <a href="{% url 'question_vote' question.id 'plus' %}"><span class="oi oi-chevron-top"></span></a>
+            {% else %}
+                &nbsp;
+            {% endif %}
+            </div>
             <div>{{ question.rating }}</div>
-            <div><a href="{% url 'question_vote' question.id 'minus' %}"><span class="oi oi-chevron-bottom"></span></a></div>
+            <div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'question_vote' question.id 'minus' %}"><span class="oi oi-chevron-bottom"></span></a>
+            {% else %}
+                &nbsp;
+            {% endif %}
+            </div>
         </div>
 
         <p>{{ question.content }}</p>
     </div>
     <div class="row">
-        <div class="col-4">{% for tag in question.tags.all %} <a href="/?search=[{{ tag.name }}]" class="btn btn-info btn-sm" role="button">{{ tag.name }}</a>&nbsp;{% endfor %}</div>
-        <div class="col-4">{{ question.author.profile.avatar_href }} {{ question.author.username }}</div>
+        <div class="col-lg-1"></div>
+        <div class="col-7">{% for tag in question.tags.all %} <a href="{% url 'tag_result' tag %}" class="btn btn-info btn-sm" role="button">{{ tag.name }}</a>&nbsp;{% endfor %}</div>
+        <div class="col-2">{% if question.author.avatar %}<img src="{{ question.author.avatar.url }}" width="50" height="50"/>{% endif %} {{ question.author.username }}</div>
     </div>
 
     <hr />
-{% for answer in question.answers.all %}
+{% for answer in question.answers.top_rating %}
     <div class="row">
-        <div class="col-lg-1">
+        <div class="col-lg-1 text-center">
             {% if answer.is_accepted %}
                 <div><span class="oi oi-star"></span></div>
                 {% if is_my %}<div><a href="{% url 'answer_accept' answer.id %}">un-accept</a></div>{% endif %}
             {% else %}
                 {% if is_my %}<div><a href="{% url 'answer_accept' answer.id %}">accept</a></div>{% endif %}
             {% endif %}
-            <div class="text-center"><a href="{% url 'answer_vote' question.id answer.id 'plus' %}"><span class="oi oi-chevron-top"></span></a></div>
+            <div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'answer_vote' question.id answer.id 'plus' %}"><span class="oi oi-chevron-top"></span></a>
+                {% else %}&nbsp;
+                {% endif %}
+            </div>
             <div class="text-center">{{ answer.rating }}</div>
-            <div class="text-center"><a href="{% url 'answer_vote' question.id answer.id 'minus' %}"><span class="oi oi-chevron-bottom"></span></a></div>
+            <div class="text-center">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'answer_vote' question.id answer.id 'minus' %}"><span class="oi oi-chevron-bottom"></span></a>
+                {% else %}&nbsp;
+                {% endif %}
+            </div>
 
 
         </div>
-        <div class="col-4">{{ answer.content}}</div>
+        <div class="col-lg-11">{{ answer.content}}</div class="col-lg-11">
     </div>
     <div class="row">
-        <div class="col-4">&nbsp;</div>
+        <div class="col-1">&nbsp;</div>
         <div class="col-4">{{ question.author.profile.avatar_href }} {{ question.author.username }}</div>
     </div>
 
     <hr />
 {% endfor %}
+
+    {% if user.is_authenticated %}
     <h4>Your answer</h4>
-<form method="POST" action="{% url 'view_question' question.id %}">{% csrf_token %}
-    <div class="form-group">
-        <textarea name="answer" id="answer" class="form-control"></textarea>
-    </div>
-    {% for error in errors %}
-    <div>Error: {{ error }}</div>
-    {% endfor %}
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+    <form method="POST" action="{% url 'view_question' question.id %}">{% csrf_token %}
+        <div class="form-group">
+            <textarea name="answer" id="answer" class="form-control"></textarea>
+        </div>
+        {% for error in errors %}
+        <div>Error: {{ error }}</div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    {% endif %}
 {% endblock %}

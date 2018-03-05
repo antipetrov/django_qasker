@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404, HttpResponseNotAllowed
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from forms import AskForm, SignupForm
+from forms import AskForm, SignupForm, UserEditForm
 from models import Question, Tag, Answer, User
 from django import urls
 
@@ -57,9 +57,9 @@ def _paginate(objects, page, on_page=5):
 
 def index(request):
     page = request.GET.get('page')
-    question_page = _paginate(Question.objects.presorted(), page)
+    question_page = _paginate(Question.objects.top_rating(), page)
 
-    topquestions = Question.objects.presorted()[:10]
+    topquestions = Question.objects.top_rating()[:10]
 
 
     return render(request, 'answers/index.html', {"questions": question_page,
@@ -72,7 +72,7 @@ def search_result(request):
 
     questions = Question.objects
     if not search_dict['words'] and not search_dict['tags']:
-        questions = questions.presorted()
+        questions = questions.top_rating()
     else:
         if search_dict['tags']:
             questions = questions.filter(tags__name__in=search_dict['tags'])
@@ -81,7 +81,7 @@ def search_result(request):
             search_term = ' '.join(search_dict['words'])
             questions = questions.filter(Q(title__contains=search_term) | Q(content__contains=search_term))
 
-    topquestions = Question.objects.presorted()
+    topquestions = Question.objects.top_rating()[:10]
 
     page = request.GET.get('page')
     questions = _paginate(questions, page)
@@ -95,9 +95,9 @@ def search_result(request):
 
 def tag_result(request, tag):
     search_dict = _parse_search("tag:%s" % tag)
-    questions = Question.objects.presorted().filter(tags__name__in=search_dict['tags'])
+    questions = Question.objects.top_rating().filter(tags__name__in=search_dict['tags'])
 
-    topquestions = Question.objects.presorted()
+    topquestions = Question.objects.top_rating()[:10]
 
     page = request.GET.get('page')
     questions = _paginate(questions, page)
@@ -107,40 +107,6 @@ def tag_result(request, tag):
                                                   "search": search_dict})
 
 
-def user_login(request):
-    ctx = {}
-    if request.method == 'POST':
-        errors = []
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        
-        if not username:
-            errors.append('no username')
-
-        if not username:
-            errors.append('no password')
-
-        if errors:
-            ctx = { 'errors': errors }
-            return render(request, 'answers/login.html', ctx)
-
-        user = authenticate(request, username=username, password=password)        
-        if user:
-            login(request, user)
-            return redirect('index')
-        else:
-            ctx = {'errors': ['Invalid login or password']}
-    
-    return render(request, 'answers/login.html', ctx)
-
-
-def user_logout(request):
-    logout(request)
-    return redirect('index')
-
-
-def user_signup(request):
-    return render(request, 'answers/signup.html', {})
 
 
 @login_required
@@ -170,7 +136,6 @@ def list_tags_json(request):
     return HttpResponse(json.dumps(tags))
 
 
-@login_required
 def view_question(request, question_id):
     errors = []
     try:
@@ -206,7 +171,6 @@ def view_question(request, question_id):
 
         if not errors:
             redirect('view_question', question.id)
-
 
     return render(request, 'answers/answer.html', {'question': question,
                                                    'errors': errors,
@@ -289,7 +253,18 @@ def view_user(request, user_id):
     except User.DoesNotExist:
         raise Http404("User does not exist")
 
-    return render(request, 'answers/user.html', {'user': user})
+    if request.method == 'POST':
+        form = UserEditForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('view_user', user_id)
+
+    else:
+        form = UserEditForm(instance=user)
+
+    print(form)
+
+    return render(request, 'answers/user.html', {'form': form})
 
 
 def signup(request):
@@ -303,3 +278,39 @@ def signup(request):
         form = SignupForm()
 
     return render(request, 'answers/signup.html', {'form': form})
+
+
+def user_login(request):
+    ctx = {}
+    if request.method == 'POST':
+        errors = []
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        if not username:
+            errors.append('no username')
+
+        if not username:
+            errors.append('no password')
+
+        if errors:
+            ctx = {'errors': errors}
+            return render(request, 'answers/login.html', ctx)
+
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('index')
+        else:
+            ctx = {'errors': ['Invalid login or password']}
+
+    return render(request, 'answers/login.html', ctx)
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('index')
+
+
+def user_signup(request):
+    return render(request, 'answers/signup.html', {})

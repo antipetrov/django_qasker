@@ -17,7 +17,7 @@ class Tag(models.Model):
 
 
 class QuestionManager(models.Manager):
-    def presorted(self, **kwargs):
+    def top_rating(self, **kwargs):
         return self.prefetch_related('tags').select_related('author').order_by('-rating', '-create_date')
 
 
@@ -37,6 +37,11 @@ class Question(models.Model):
     objects = QuestionManager()
 
 
+class AnswerManager(models.Manager):
+    def top_rating(self, **kwargs):
+        return self.select_related('author').order_by('-is_accepted', '-rating', '-create_date')
+
+
 class Answer(models.Model):
     author = models.ForeignKey(User, null=False)
     create_date = models.DateTimeField('date created', db_index=True, null=False)
@@ -46,8 +51,12 @@ class Answer(models.Model):
     votes = models.ManyToManyField(User, related_name='voted_answers')
     is_accepted = models.BooleanField(default=False)
 
+    objects = AnswerManager()
+
     def __str__(self):
         return "%s:%s"%(self.question.title, self.content[:200])
+
+
 
 
 # class UserProfile(models.Model):

@@ -69,7 +69,6 @@ class AskForm(forms.ModelForm):
         super(AskForm, self)._save_m2m()
 
 
-
 class SignupForm(forms.ModelForm):
 
     username = forms.CharField(max_length=64, strip=True,
@@ -105,26 +104,25 @@ class SignupForm(forms.ModelForm):
 
         return password2
 
-    @transaction.atomic
     def save(self, *args, **kwargs):
-        # user = User()
-        # user.username = self.cleaned_data['username']
-        # user.set_password(self.cleaned_data["password1"])
-        # user.email = self.cleaned_data['email']
-        # user.date_joined = datetime.now()
-        # user.save()
-
         new_user = super(SignupForm, self).save(*args, **kwargs)
         new_user.set_password(self.cleaned_data["password1"])
-        # new_user.avatar = self.cleaned_data.get('avatar')
         new_user.save()
-
-        # new_profile = User()
-        # new_profile.user = new_user
-        # new_profile.avatar_href = self.cleaned_data.get('avatar')
-        # new_profile.save()
-
         return new_user
 
 
+class UserEditForm(forms.ModelForm):
 
+    username = forms.CharField(max_length=64, strip=True,
+                               widget=forms.widgets.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(widget=forms.widgets.EmailInput(attrs={'class': 'form-control'}))
+    avatar = forms.ImageField(widget=ImageInput(attrs={'class': 'form-control'}), required=False)
+
+    # def save(self, *args, **kwargs):
+    #     new_user = super(UserEditForm, self).save(*args, **kwargs)
+    #     new_user.save()
+    #     return new_user
+    
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'avatar')

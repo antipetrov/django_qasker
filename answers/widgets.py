@@ -27,3 +27,9 @@ class ImageInput(FileInput):
     input_type = 'file'
     needs_multipart_form = True
     template_name = 'answers/widgets/image_input.html'
+
+    def format_value(self, value):
+        return value
+
+    def render(self, name, value, attrs=None, renderer=None):
+        return super(ImageInput, self).render(name, value, attrs, renderer)
