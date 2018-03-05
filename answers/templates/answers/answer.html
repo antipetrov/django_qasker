@@ -22,11 +22,11 @@
             </div>
         </div>
 
-        <p>{{ question.content }}</p>
+        <div class="col-lg-11">{{ question.content }}</div>
     </div>
     <div class="row">
         <div class="col-lg-1"></div>
-        <div class="col-7">{% for tag in question.tags.all %} <a href="{% url 'tag_result' tag %}" class="btn btn-info btn-sm" role="button">{{ tag.name }}</a>&nbsp;{% endfor %}</div>
+        <div class="col-7">{% for tag in question.tags.all %} <a href="{% url 'tag_result' tag=tag.name %}" class="btn btn-info btn-sm" role="button">{{ tag.name }}</a>&nbsp;{% endfor %}</div>
         <div class="col-2">{% if question.author.avatar %}<img src="{{ question.author.avatar.url }}" width="50" height="50"/>{% endif %} {{ question.author.username }}</div>
     </div>
 
@@ -56,7 +56,7 @@
 
 
         </div>
-        <div class="col-lg-11">{{ answer.content}}</div class="col-lg-11">
+        <div class="col-lg-11">{{ answer.content}}</div>
     </div>
     <div class="row">
         <div class="col-1">&nbsp;</div>

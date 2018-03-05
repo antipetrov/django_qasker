@@ -139,7 +139,7 @@ def list_tags_json(request):
 def view_question(request, question_id):
     errors = []
     try:
-        question = Question.objects.get(id=question_id)
+        question = Question.objects.prefetch_related('tags').select_related('author').get(id=question_id)
     except Question.DoesNotExist:
         raise Http404("Question does not exist")
 
@@ -229,11 +229,18 @@ def answer_vote(request, question_id, answer_id, action):
 def answer_accept(request, answer_id):
     try:
         answer = Answer.objects.get(id=answer_id)
-    except Question.DoesNotExist:
+    except Answer.DoesNotExist:
         raise Http404("Answer does not exist")
 
-    if not answer.author == request.user:
-        raise HttpResponseNotAllowed("You cannot mark someone elses answer")
+    question = answer.question
+
+    if not question.author == request.user:
+        is_my = (request.user.id == question.author.id)
+
+        errors = ['You cannot mark answer in someone elses question']
+        return render(request, 'answers/answer.html', {'question': question,
+                                                       'errors': errors,
+                                                       'is_my': is_my})
 
     with transaction.atomic():
         if not answer.is_accepted:

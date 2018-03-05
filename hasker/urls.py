@@ -26,7 +26,7 @@ urlpatterns = [
 
     url(r'^$', views.index, name='index'),
     url(r'^search/?$', views.search_result, name='search_result'),
-    url(r'^tag/(?P<tag>\S+)/$', views.tag_result, name='tag_result'),
+    url(r'^tag/(?P<tag>[a-zA-Z0-9]+)/$', views.tag_result, name='tag_result'),
     url(r'^login/$', views.user_login, name="login"),
     url(r'^logout/$', views.user_logout, name="logout"),
     url(r'^ask/?$', views.ask_question, name="ask"),
