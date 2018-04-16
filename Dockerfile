@@ -1,7 +1,16 @@
-FROM centos:latest
+FROM jfloff/alpine-python:2.7-slim
 
-RUN yum install -y python mysql && curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py" && python get-pip.py
+RUN apk add python python-devel python-pip
 
-ADD hasker/requirements.txt /requirements.txt
+WORKDIR /opt/hasker
 
-RUN pip install -r /requirements.txt
+COPY requirements.txt /opt/hasker/requirements.txt
+
+
+RUN pip install -r /opt/hasker/requirements.txt
+
+COPY ./ /opt/hasker
+
+EXPOSE 8000
+
+CMD ["uwsgi", "--ini", "/opt/hasker/uwsgi.ini"]
