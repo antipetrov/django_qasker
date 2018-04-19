@@ -1,6 +1,9 @@
 build:
-	docker build -t antipetrov/hasker_server .
+	docker build --rm -t hasker_server:local .
 
 run:
-	docker run -it -p 8080:8080 -p 3309:3306 -v `pwd`:/hasker -w /hasker --name hasker_centos --rm antipetrov/hasker bash
+	docker-compose up -d
+
+stop:
+	docker-compose down
 

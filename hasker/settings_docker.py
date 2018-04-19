@@ -13,20 +13,18 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 from hasker.settings import *
 
-# mysql://b64817464909a3:13313200@eu-cdbr-west-02.cleardb.net/heroku_20c5cfc0c73b545?reconnect=true
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST':'mysql',
-        'PORT':'3306',
+        'HOST': 'mysql',
+        'PORT': '3306',
         'USER': 'root',
         'PASSWORD': 'root',
         'NAME': 'hasker',
-        'TEST':{
-            'NAME':'hasker_test'
+        'TEST': {
+            'NAME': 'hasker_test'
         }
     }
 }
 
-DEBUG = False
+DEBUG = True
