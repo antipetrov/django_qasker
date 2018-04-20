@@ -15,7 +15,7 @@ services:
   nginx:
     image: nginx:latest
     volumes: 
-    - "./hasker/static:/opt/static"
+    - ../volumes/hasker/static:/opt/static:ro
     - ./nginx/conf.d:/etc/nginx/conf.d
     - ./nginx/log:/var/log/nginx
     ports:
@@ -26,6 +26,8 @@ services:
   backend:
     restart: always
     image: hasker_server:local
+    volumes:    
+    - ../volumes/hasker/static:/opt/hasker/hasker/static:rw
     depends_on:
     - "mysql"
     links:
