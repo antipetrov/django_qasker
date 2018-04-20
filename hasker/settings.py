@@ -25,7 +25,7 @@ SECRET_KEY = '0t2g3s$k5r7@7@d$t2aah-&g_8jbmhwai-6e4opcg#$go0fe&$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'haskerproject_backend_1', '37.139.2.116']
 
 
 # Application definition
