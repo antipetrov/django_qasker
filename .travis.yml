@@ -11,8 +11,8 @@ before_install:
 
 install:
   - pip install -r requirements.txt
-  - mysql -e 'CREATE DATABASE  IF NOT EXISTS hasker;'
-  - python manage.py migrate --noinput
+#  - mysql -e 'CREATE DATABASE  IF NOT EXISTS hasker;'
+#  - python manage.py migrate --noinput
 
 script:
   - python --version
