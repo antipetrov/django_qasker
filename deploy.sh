@@ -12,12 +12,13 @@ ssh-add key_hasker # Add the private key to SSH
 
 git config --global push.default matching
 git remote add deploy ssh://git@$IP:$PORT$DEPLOY_DIR
-git push deploy master
+git pull deploy master
 
 ls
 
 ssh hasker@$IP -p $PORT -i key_hasker <<EOF
   cd $DEPLOY_DIR
+  git pull
   make build
   make run
 EOF
