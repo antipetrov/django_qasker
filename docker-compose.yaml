@@ -19,7 +19,7 @@ services:
     - ./nginx/conf.d:/etc/nginx/conf.d
     - ./nginx/log:/var/log/nginx
     ports:
-    - "8000:8000"
+    - "80:80"
     links:
     - "backend"
   
