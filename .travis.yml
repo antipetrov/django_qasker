@@ -7,7 +7,7 @@ services: mysql
 
 
 before_install:
-  - openssl aes-256-cbc -K $encrypted_65a296283a37_key -iv $encrypted_65a296283a37_iv -in key_hasker.enc -out .travis/key_hasker -d
+  - openssl aes-256-cbc -K $encrypted_65a296283a37_key -iv $encrypted_65a296283a37_iv -in key_hasker.enc -out key_hasker -d
   - mysql -e 'CREATE DATABASE  IF NOT EXISTS hasker;'
 
 install:
