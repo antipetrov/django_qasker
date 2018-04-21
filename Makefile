@@ -1,5 +1,5 @@
 build:
-	docker build --rm -t hasker_server:local .
+	docker build -f docker/Dockerfile --rm -t hasker_server:local .
 
 run:
 	docker-compose up -d
