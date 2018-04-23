@@ -1,5 +1,7 @@
 {% load staticfiles %}
-<img src="{% if widget.value != None %}{{ widget.value.url }}{% else  %}{% static 'images/avatar_75.png' %}{% endif %}" width="75" height="75" id="{{ widget.name }}_preview"/><br/>
+
+{#{{ widget.value }}#}
+<img src="{% if widget.value %}{{ widget.value.url }}{% else  %}{% static 'images/avatar_75.png' %}{% endif %}" width="75" height="75" id="{{ widget.name }}_preview"/><br/>
 <input type="file" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value }}"{% endif %}{% include "django/forms/widgets/attrs.html" %} />
 <script type="text/javascript">
 function readURL(input) {

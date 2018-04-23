@@ -27,7 +27,11 @@
     <div class="row">
         <div class="col-lg-1"></div>
         <div class="col-7">{% for tag in question.tags.all %} <a href="{% url 'tag_result' tag=tag.name %}" class="btn btn-info btn-sm" role="button">{{ tag.name }}</a>&nbsp;{% endfor %}</div>
-        <div class="col-2">{% if question.author.avatar %}<img src="{{ question.author.avatar.url }}" width="50" height="50"/>{% endif %} {{ question.author.username }}</div>
+        <div class="col-3">
+            {% if question.author.avatar %}<img src="{{ question.author.avatar.url }}" width="50" height="50"/>{% endif %}
+            {{ question.author.username }}
+            <div class="small">{{ question.create_date }}</div>
+        </div>
     </div>
 
     <hr />
@@ -47,6 +51,7 @@
                 {% endif %}
             </div>
             <div class="text-center">{{ answer.rating }}</div>
+
             <div class="text-center">
                 {% if user.is_authenticated %}
                     <a href="{% url 'answer_vote' question.id answer.id 'minus' %}"><span class="oi oi-chevron-bottom"></span></a>
@@ -60,7 +65,12 @@
     </div>
     <div class="row">
         <div class="col-1">&nbsp;</div>
-        <div class="col-4">{{ question.author.profile.avatar_href }} {{ question.author.username }}</div>
+        <div class="col-7">&nbsp;</div>
+        <div class="col-3">
+            {% if answer.author.avatar %}<img src="{{ answer.author.avatar.url }}" width="50" height="50"/>{% endif %}
+            {{ answer.author.username }}
+            <div class="small">{{ answer.create_date }}</div>
+        </div>
     </div>
 
     <hr />

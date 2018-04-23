@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import datetime
+from django.utils import timezone
 import json
 
 from django.db import transaction
@@ -112,7 +112,7 @@ def tag_result(request, tag):
 @login_required
 def ask_question(request):
     if request.method == 'POST':
-        new_question = Question(author=request.user, create_date=datetime.datetime.now())
+        new_question = Question(author=request.user, create_date=timezone.now())
 
         form = AskForm(request.POST, instance=new_question)
         if form.is_valid():
@@ -160,7 +160,7 @@ def view_question(request, question_id):
                 new_answer.question = question
                 new_answer.author = request.user
                 new_answer.content = answer_text
-                new_answer.create_date = datetime.datetime.now()
+                new_answer.create_date = timezone.now()
 
                 new_answer.save()
             except Exception as e:
@@ -269,7 +269,7 @@ def view_user(request, user_id):
     else:
         form = UserEditForm(instance=user)
 
-    print(form)
+    # print(form)
 
     return render(request, 'answers/user.html', {'form': form})
 

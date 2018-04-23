@@ -1,16 +1,80 @@
 [
-        {
-    "model": "answers.quesion",
+  {
+    "model": "answers.tag",
+    "fields": {
+      "name": "php"
+    }
+  },
+  {
+    "model": "answers.tag",
+    "fields": {
+      "name": "python"
+    }
+  },
+  {
+    "model": "answers.tag",
+    "fields": {
+      "name": "t2"
+    }
+  },
+  {
+    "model": "answers.tag",
+    "fields": {
+      "name": "t3"
+    }
+  },
+  {
+    "model": "answers.tag",
+    "fields": {
+      "name": "tag2"
+    }
+  },
+  {
+    "model": "answers.user",
+    "pk": 3,
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": 0,
+      "username": "user1",
+      "first_name": "",
+      "last_name": "",
+      "email": "antipetrov@gmail.com",
+      "is_staff": 0,
+      "is_active": 1,
+      "date_joined": "2018-03-03 09:27:56.328008",
+      "avatar": null
+    }
+  },
+  {
+    "model": "answers.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$36000$fyY7zFLGflD4$oyFrDbkkaPsi09IKljjp5WaP/r5ef84nxY2nA8Jnlfg=",
+      "last_login": "2018-03-05 02:06:42.078704",
+      "is_superuser": 0,
+      "username": "user2",
+      "first_name": "",
+      "last_name": "",
+      "email": "test@test.com",
+      "is_staff": 0,
+      "is_active": 1,
+      "date_joined": "2018-03-03 09:29:58.576102",
+      "avatar": null
+    }
+  },
+  {
+    "model": "answers.question",
     "pk": 1,
     "fields": {
-            "create_date": "2018-03-04 08:06:34.556102",
-            "title": "my question",
-            "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at sapien felis. Maecenas pretium vestibulum justo et posuere. Donec cursus laoreet pulvinar. Aenean viverra elementum efficitur. Etiam nec mi eu lacus condimentum pellentesque. Praesent eu tinc",
-            "rating": 1,
-            "answers_count": 1,
-            "author_id": 4
-        }
-    },
+      "create_date": "2018-03-04 08:06:34.556102",
+      "title": "my question",
+      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at sapien felis. Maecenas pretium vestibulum justo et posuere. Donec cursus laoreet pulvinar. Aenean viverra elementum efficitur. Etiam nec mi eu lacus condimentum pellentesque. Praesent eu tinc",
+      "rating": 1,
+      "answers_count": 1,
+      "author_id": 4
+    }
+  },
   {
     "model": "answers.answer",
     "pk": 1,
@@ -19,7 +83,7 @@
       "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at sapien felis. Maecenas pretium vestibulum justo et posuere. Donec cursus laoreet pulvinar. Aenean viverra elementum efficitur. Etiam nec mi eu lacus condimentum pellentesque. Praesent eu tincidunt orci, sed porttitor enim. Proin eu finibus metus. Cras ultrices massa a turpis ornare pharetra. Phasellus consequat, erat ut gravida dapibus, tortor ligula viverra erat, vitae laoreet eros lacus at odio. Morbi molestie rhoncus urna, sed consectetur ex tempor sed. Duis quam mi, cursus quis risus ac, blandit porta ligula.",
       "rating": 0,
       "is_accepted": 0,
-      "author_id": 4,
+      "author_id": 3,
       "question_id": 1
     }
   },
@@ -52,11 +116,11 @@
     }
   },
   {
-    "model": "answers.answer_votes",
-    "pk": 3,
+    "model": "answers.question_votes",
+    "pk": 1,
     "fields": {
-      "answer_id": 5,
-      "user_id": 4
+      "question_id": 1,
+      "user_id": 3
     }
   }
 ]

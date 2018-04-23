@@ -26,6 +26,8 @@ services:
   backend:
     restart: always
     image: hasker_server:local
+    environment:
+    - DJANGO_SETTINGS_MODULE=hasker.settings_docker
     volumes:    
     - ./volumes/backend/static:/opt/hasker/hasker/static:rw
     depends_on:
