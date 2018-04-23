@@ -21,6 +21,8 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': 'root',
         'NAME': 'hasker',
+        'TIME_ZONE': 'Europe/Moscow',
+
         'TEST': {
             'NAME': 'hasker_test'
         }
