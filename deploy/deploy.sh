@@ -19,6 +19,5 @@ ssh-add deploy/key_hasker # Add the private key to SSH
 ssh hasker@$IP -p $PORT -i deploy/key_hasker <<EOF
   cd $DEPLOY_DIR
   git pull
-  make build
-  make run
+  make prod
 EOF
