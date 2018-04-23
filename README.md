@@ -7,7 +7,16 @@ Home-grown stackeoverflow-like QA service. Vanilla Django. Hardcore. Now with av
 
 http://37.139.2.116
 
+#### auth
 login: demouser
+
+password: demopass
+
+#### admin
+http://37.139.2.116/admin
+
+login: demoadmin
+
 password: demopass
 
 ## Usage
