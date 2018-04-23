@@ -1,8 +1,14 @@
 # django_qasker
 
+Home-grown stackeoverflow-like QA service. Vanilla Django. Hardcore. Now with avatars.
 
-Home-grown stackeoverflow QA site. Vanilla Django. Hardcore.
 
+## Demo-site
+
+http://37.139.2.116
+
+login: demouser
+password: demopass
 
 ## Usage
 
@@ -19,7 +25,6 @@ Also updates DB with fresh migrations.
 
 Rebulds docker image for hasker-backend
 
-
 **make run**
 
 starts all services using docker-compose
@@ -33,4 +38,5 @@ stops all services
 loads initial data (django fixtures) to get you up to speed.
 
 **make test**
+
 runs tests

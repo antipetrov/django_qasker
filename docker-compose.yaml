@@ -16,8 +16,8 @@ services:
     image: nginx:latest
     volumes: 
     - ./volumes/backend/static:/opt/static:ro
-    - ./nginx/conf.d:/etc/nginx/conf.d
-    - ./nginx/log:/var/log/nginx
+    - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    - ./volumes/nginx/log:/var/log/nginx
     ports:
     - "80:80"
     links:
