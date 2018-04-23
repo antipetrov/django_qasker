@@ -9,6 +9,9 @@ run-debug:
 	docker-compose up
 	docker exec haskerproject_backend_1 python manage.py collectstatic --noinput
 
+test:
+	docker exec haskerproject_backend_1 python manage.py test
+
 
 stop:
 	docker-compose down
